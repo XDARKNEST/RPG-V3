@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>RPG MOBILE BY RESTU</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="game-container">
+    <canvas id="gameCanvas"></canvas>
+    <div id="ui">
+      <button id="btn-attack">⚔️</button>
+      <button id="btn-inventory">🎒</button>
+      <button id="btn-quest">📜</button>
+    </div>
+    <div id="cheat-menu" class="hidden">
+      <h2>Developer Cheat Menu</h2>
+      <button onclick="Cheat.giveGold(9999)">💰 Gold 9999</button>
+      <button onclick="Cheat.heal()">❤️ Heal</button>
+      <button onclick="Cheat.unlockAll()">🔑 Unlock All</button>
+      <button onclick="Cheat.spawnNPC()">🤖 Spawn NPC</button>
+    </div>
+  </div>
+
+  <script src="npcAI.js"></script>
+  <script src="cheat.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
