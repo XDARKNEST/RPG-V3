@@ -1,0 +1,64 @@
+body {
+  margin: 0;
+  padding: 0;
+  background: #111;
+  color: white;
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+#game-container {
+  position: relative;
+  width: 100%;
+  max-width: 480px; /* biar pas HP */
+  height: 100vh;
+  background: #222;
+  overflow: hidden;
+}
+
+#gameCanvas {
+  width: 100%;
+  height: 100%;
+  background: #333;
+}
+
+#ui {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+}
+
+#ui button {
+  font-size: 24px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 12px;
+  background: #444;
+  color: white;
+}
+
+#cheat-menu {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: rgba(0,0,0,0.8);
+  padding: 15px;
+  border-radius: 10px;
+  display: none;
+}
+
+#cheat-menu.hidden {
+  display: none;
+}
+
+#cheat-menu button {
+  display: block;
+  margin: 5px 0;
+  width: 100%;
+}
