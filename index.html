@@ -3,28 +3,159 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <title>RPG MOBILE BY RESTU</title>
-  <link rel="stylesheet" href="style.css">
+  <title>RPG MOBILE BY RESTU (Text)</title>
+  <style>
+    body {
+      background: #111;
+      color: #eee;
+      font-family: monospace;
+      padding: 20px;
+      max-width: 480px;
+      margin: auto;
+    }
+    #log {
+      height: 60vh;
+      overflow-y: auto;
+      border: 1px solid #444;
+      padding: 10px;
+      margin-bottom: 10px;
+      background: #222;
+    }
+    #choices button {
+      display: block;
+      width: 100%;
+      margin: 5px 0;
+      padding: 10px;
+      background: #333;
+      border: none;
+      color: white;
+      font-size: 16px;
+      border-radius: 8px;
+    }
+    #cheatMenu {
+      display: none;
+      background: #222;
+      padding: 10px;
+      border: 1px solid #666;
+      margin-top: 10px;
+    }
+    #cheatMenu button {
+      margin: 5px 0;
+      width: 100%;
+    }
+  </style>
 </head>
 <body>
-  <div id="game-container">
-    <canvas id="gameCanvas"></canvas>
-    <div id="ui">
-      <button id="btn-attack">⚔️</button>
-      <button id="btn-inventory">🎒</button>
-      <button id="btn-quest">📜</button>
-    </div>
-    <div id="cheat-menu" class="hidden">
-      <h2>Developer Cheat Menu</h2>
-      <button onclick="Cheat.giveGold(9999)">💰 Gold 9999</button>
-      <button onclick="Cheat.heal()">❤️ Heal</button>
-      <button onclick="Cheat.unlockAll()">🔑 Unlock All</button>
-      <button onclick="Cheat.spawnNPC()">🤖 Spawn NPC</button>
-    </div>
+  <h1>RPG MOBILE BY RESTU</h1>
+  <div id="stats"></div>
+  <div id="log"></div>
+  <div id="choices"></div>
+  
+  <div id="cheatMenu">
+    <h3>Developer Cheat Menu</h3>
+    <button onclick="Cheat.gold()">💰 Tambah Gold</button>
+    <button onclick="Cheat.heal()">❤️ Full Heal</button>
+    <button onclick="Cheat.item()">🗡️ Item Legendaris</button>
   </div>
+  
+  <script>
+    const game = {
+      player: {hp:100, maxHp:100, gold:0, items:[]},
+      log(msg){
+        const log = document.getElementById("log");
+        log.innerHTML += msg+"<br>";
+        log.scrollTop = log.scrollHeight;
+      },
+      updateStats(){
+        document.getElementById("stats").innerHTML =
+          `HP: ${this.player.hp}/${this.player.maxHp} | Gold: ${this.player.gold} | Item: ${this.player.items.join(", ")||"-"}`;
+      },
+      choice(options){
+        const c = document.getElementById("choices");
+        c.innerHTML = "";
+        options.forEach(o=>{
+          const b=document.createElement("button");
+          b.textContent=o.text;
+          b.onclick=o.action;
+          c.appendChild(b);
+        });
+      },
+      npcInteract(){
+        const responses=[
+          "NPC: Halo petualang!",
+          "NPC: Awas ada monster di depan!",
+          "NPC: Aku bisa jual ramuan padamu.",
+          "NPC: Jangan ganggu aku!"
+        ];
+        this.log(responses[Math.floor(Math.random()*responses.length)]);
+      },
+      battle(){
+        let dmg=Math.floor(Math.random()*20)+1;
+        this.player.hp-=dmg;
+        this.log("Monster menyerang! -"+dmg+" HP");
+        if(this.player.hp<=0){
+          this.log("Kamu kalah...");
+          this.choice([{text:"Restart",action:()=>location.reload()}]);
+        }else{
+          this.choice([
+            {text:"Serang balik",action:()=>{
+              let goldGain=Math.floor(Math.random()*50);
+              this.player.gold+=goldGain;
+              this.log("Kamu menang! Dapat "+goldGain+" gold.");
+              this.updateStats();
+              this.start();
+            }},
+            {text:"Kabur",action:()=>this.start()}
+          ]);
+        }
+        this.updateStats();
+      },
+      start(){
+        this.updateStats();
+        this.choice([
+          {text:"Jalan ke hutan 🌲",action:()=>this.battle()},
+          {text:"Bicara dengan NPC 🤖",action:()=>{this.npcInteract();this.start();}},
+          {text:"Istirahat 🛌",action:()=>{
+            this.player.hp=this.player.maxHp;
+            this.log("Kamu istirahat dan HP full kembali.");
+            this.updateStats();
+            this.start();
+          }},
+          {text:"Masukkan Cheat 🔑",action:()=>{
+            let code=prompt("Masukkan kode cheat:");
+            if(code==="DRAKS@1122"){Cheat.activate();}
+            else alert("Kode salah!");
+            this.start();
+          }}
+        ]);
+      }
+    };
 
-  <script src="npcAI.js"></script>
-  <script src="cheat.js"></script>
-  <script src="game.js"></script>
+    const Cheat={
+      activate(){
+        document.getElementById("cheatMenu").style.display="block";
+        game.log("Cheat mode aktif!");
+      },
+      gold(){
+        game.player.gold+=1000;
+        game.log("Cheat: +1000 Gold");
+        game.updateStats();
+      },
+      heal(){
+        game.player.hp=game.player.maxHp;
+        game.log("Cheat: Full Heal");
+        game.updateStats();
+      },
+      item(){
+        game.player.items.push("Pedang Legendaris");
+        game.log("Cheat: Item Legendaris didapat!");
+        game.updateStats();
+      }
+    };
+
+    // Start game
+    game.log("Petualangan dimulai!");
+    game.start();
+  </script>
 </body>
 </html>
